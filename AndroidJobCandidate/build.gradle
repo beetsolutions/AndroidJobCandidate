@@ -6,7 +6,7 @@ buildscript {
             'appcompat'           : '1.1.0',
             'androidx'            : '1.2.3',
             'lifecycle'           : '2.2.0',
-            'archLifecycle'       : '2.1.0',
+            'archLifecycle'       : '2.2.0',
             'recyclerview'        : '1.1.0',
             'cardview'            : '1.0.0',
             'picasso'             : '2.5.2',

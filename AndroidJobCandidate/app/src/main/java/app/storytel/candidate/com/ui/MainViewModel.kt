@@ -24,6 +24,7 @@ class MainViewModel @Inject constructor() :
     private val job = SupervisorJob()
 
     private val TIMEOUT_LIMIT = 5000L
+    private val COMMENTS_NUMBER = 3
 
     @Inject
     lateinit var context: Context
@@ -37,7 +38,7 @@ class MainViewModel @Inject constructor() :
 
     private val _currentScrollingPositionLiveData = MutableLiveData<Int>()
     val currentScrollingPositionLiveData = _currentScrollingPositionLiveData
-    fun getScrollingPosition (pos:Int){
+    fun getScrollingPosition(pos: Int) {
         _currentScrollingPositionLiveData.setOrPost(pos)
     }
 
@@ -62,7 +63,6 @@ class MainViewModel @Inject constructor() :
 
                     postAndPhotoListLiveData.setOrPost(PostsAndPhotos(latestPosts, latestPhotos))
                 } else {
-                    isLoadingPostsAndPhotos.setOrPost(true)
                     Log.e("Empty post or Photo", "No contents about this post or photo!")
 
                     delay(TIMEOUT_LIMIT)
@@ -88,9 +88,8 @@ class MainViewModel @Inject constructor() :
 
                 if (!latestComments.isNullOrEmpty()) {
                     isLoadingComments.setOrPost(false)
-                    _commentsLiveData.setOrPost(latestComments)
+                    _commentsLiveData.setOrPost(latestComments.take(COMMENTS_NUMBER).toMutableList())
                 } else {
-                    isLoadingComments.setOrPost(true)
                     Log.i("Empty COMMENTS", "No comments about this post!")
 
                     delay(TIMEOUT_LIMIT)

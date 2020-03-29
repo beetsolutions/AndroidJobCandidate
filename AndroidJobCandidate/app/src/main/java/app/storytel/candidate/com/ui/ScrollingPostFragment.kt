@@ -1,7 +1,6 @@
 package app.storytel.candidate.com.ui
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import app.storytel.candidate.com.R
 import app.storytel.candidate.com.extensions.setOrPost
 import app.storytel.candidate.com.extensions.setVisibleOrGone
-import app.storytel.candidate.com.utils.ShowAlertDialog
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_scrolling_post.*
 import javax.inject.Inject
@@ -33,8 +31,7 @@ class ScrollingPostFragment : DaggerFragment() {
         showPostLoading()
         loadPostAndPhotoList()
 
-        val postAlert = ShowAlertDialog(requireContext(), loadPostAndPhotoList())
-        showPostTimeout(postAlert)
+        showPostTimeout()
     }
 
     private fun showPostLoading() {
@@ -43,12 +40,26 @@ class ScrollingPostFragment : DaggerFragment() {
         })
     }
 
-    private fun showPostTimeout(alert: AlertDialog) {
+    private fun showPostTimeout() {
         mainViewModel.isTimeoutPostsAndPhotos.observe(viewLifecycleOwner, Observer { isTimeout ->
-            if (isTimeout == true) {
+            if (isTimeout) {
+                val dialogBuilder = AlertDialog.Builder(requireContext())
+
+                dialogBuilder.setMessage(R.string.alert_msg)
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.alert_retry) { dialogInterface, _ ->
+                            dialogInterface?.dismiss()
+
+                            progressbar.setVisibleOrGone(true)
+                            loadPostAndPhotoList()
+                        }
+                        .setNegativeButton(R.string.alert_cancel) { dialogInterface, _ ->
+                            dialogInterface?.dismiss()
+                        }
+
+                val alert = dialogBuilder.create()
+                alert.setTitle(R.string.alert_title)
                 alert.show()
-            } else {
-                alert.hide()
             }
         })
     }

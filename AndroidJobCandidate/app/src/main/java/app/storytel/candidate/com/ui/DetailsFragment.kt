@@ -8,7 +8,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import app.storytel.candidate.com.R
 import app.storytel.candidate.com.extensions.setVisibleOrGone
-import app.storytel.candidate.com.utils.ShowAlertDialog
 import com.squareup.picasso.Picasso
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.comment_view.view.*
@@ -48,8 +47,7 @@ class DetailsFragment : DaggerFragment() {
         showComments()
         showCommentLoading()
 
-        val commentsAlert = ShowAlertDialog(requireContext(),showComments())
-        showCommentTimeout(commentsAlert)
+        showCommentTimeout()
     }
 
     private fun showComments() {
@@ -63,6 +61,8 @@ class DetailsFragment : DaggerFragment() {
                                 viewLifecycleOwner,
                                 Observer { comments ->
                                     comments?.let {
+                                        hideShowHolder(true)
+
                                         comments.sortByDescending { it.id }
                                         commentOne.commentTitleText.text = comments[0].name
                                         commentOne.commentBodyText.text = comments[0].body
@@ -81,21 +81,39 @@ class DetailsFragment : DaggerFragment() {
                 })
     }
 
+    private fun hideShowHolder(boolean: Boolean) {
+        commentOne.setVisibleOrGone(boolean)
+        commentTwo.setVisibleOrGone(boolean)
+        commentThree.setVisibleOrGone(boolean)
+    }
+
     private fun showCommentLoading() {
         mainViewModel.isLoadingComments.observe(viewLifecycleOwner, Observer { isLoading ->
             commentsProgressbar.setVisibleOrGone(isLoading)
-            commentOne.setVisibleOrGone(!isLoading)
-            commentTwo.setVisibleOrGone(!isLoading)
-            commentThree.setVisibleOrGone(!isLoading)
         })
     }
 
-    private fun showCommentTimeout(alert: AlertDialog) {
+    private fun showCommentTimeout() {
         mainViewModel.isTimeoutComments.observe(viewLifecycleOwner, Observer { isTimeout ->
-            if (isTimeout==true) {
+            if (isTimeout) {
+                val dialogBuilder = AlertDialog.Builder(requireContext())
+
+                dialogBuilder.setMessage(R.string.alert_msg)
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.alert_retry) { dialogInterface, _ ->
+                            dialogInterface?.dismiss()
+
+                            commentsProgressbar.setVisibleOrGone(true)
+
+                            showComments()
+                        }
+                        .setNegativeButton(R.string.alert_cancel) { dialogInterface, _ ->
+                            dialogInterface?.dismiss()
+                        }
+
+                val alert = dialogBuilder.create()
+                alert.setTitle(R.string.alert_title)
                 alert.show()
-            } else {
-                alert.hide()
             }
         })
     }
