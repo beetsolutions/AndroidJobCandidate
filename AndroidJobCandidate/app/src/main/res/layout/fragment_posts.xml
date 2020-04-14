@@ -8,6 +8,14 @@
         <variable
             name="viewModel"
             type="app.storytel.candidate.com.post.PostsViewModel" />
+
+        <variable
+            name="resource"
+            type="app.storytel.candidate.com.post.domain.data.remote.repository.resource.Resource" />
+
+        <variable
+            name="retryCallback"
+            type="app.storytel.candidate.com.common.RetryCallback" />
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -16,8 +24,42 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:itemCount="4"
+                tools:listitem="@layout/row_item_post" />
+
+            <include
+                layout="@layout/view_loading_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10"
+                android:layout_marginTop="@dimen/dimen_10"
+                android:layout_marginEnd="@dimen/dimen_10"
+                android:layout_marginBottom="@dimen/dimen_10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:resource="@{resource}" />
+
+            <include
+                layout="@layout/view_error_state"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:callback="@{() -> retryCallback.retry()}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:resource="@{resource}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>
