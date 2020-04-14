@@ -1,6 +1,7 @@
 package app.storytel.candidate.com
 
 import android.app.Application
+import app.storytel.candidate.com.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -24,7 +25,7 @@ open class App : Application() {
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(listOf())
+            modules(listOf(appModule))
         }
     }
 }
