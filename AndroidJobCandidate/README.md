@@ -1,25 +1,3 @@
-
-Methods used: In this app, I used MVVM/Dagger2/Coroutine/Livedata with Kotlin. 
-
-Function inclued: 
-1. This app can show up a main scrolling list with data from 2 APIs;
-2. After clicking on any item, a detailed page chould show up with related latest 3 comments.
-3. It also checks the internet connection, show loading processbar, show timeout dialog.
-
-Unsure point:
-The given code from you shows that the logic between posts and photos is just: "Random.nextInt(postAndPhotoList.photos.size - 1)", which means all posts show all photos randomly from all 5000 photos, which is not logical for me.But as test, I did what it asked for.
-
-Problem found:
-There is problem with photoUrl, I got right URL, used glide in right way(also tested with picaso), but photo can't show up. I would be very happy to see the solution.
-
-Further improvment:
-If I have more time I will figure out how to use paging with coroutine to make data retrieving more efficiently.
-
-
-
-
-
-
 # Android Job Candidate
 
 ### Task Description
@@ -36,4 +14,12 @@ This means that we expect that the app is stable and performs well in all possib
 
 *At the interview we expect you to walk us through the code and explain what you have done.*
 
+### Task Completion release notes
+
+* All TODOs have been fixed
+* When you click an item in the list, a detail screen is shown with the details of the post showing 3 comments if availble
+* There is a progress bar shown when loading data
+* If there is an error from the REST endpoint or from connectivity an error screen is shown with a possibility to retry when conditions are favorable
+* Post can also been saved locally given the possibility for offline capabilities
+* MVVM with Data binding and Koin/Kotlin for DI has been used for development and architectural design (Clean Architecture)
 
