@@ -14,6 +14,7 @@ import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import app.storytel.candidate.com.common.command.NavigationCommand
+import app.storytel.candidate.com.BR
 
 abstract class BaseFragment <Binding : ViewDataBinding, ViewModel : BaseViewModel> : Fragment() {
 
@@ -43,7 +44,7 @@ abstract class BaseFragment <Binding : ViewDataBinding, ViewModel : BaseViewMode
 
     private fun doDataBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
-        //binding.setVariable(BR.viewModel, viewModel)
+        binding.setVariable(BR.viewModel, viewModel)
         binding.executePendingBindings()
         onReady()
     }
