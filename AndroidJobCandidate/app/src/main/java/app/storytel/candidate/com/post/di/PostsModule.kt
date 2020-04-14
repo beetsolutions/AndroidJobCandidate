@@ -11,5 +11,5 @@ val postsModule = module {
     single { GetPostsUseCase(get()) }
     single { GetPhotosUseCase(get()) }
 
-    viewModel { PostsViewModel() }
+    viewModel { PostsViewModel(get(), get(), get()) }
 }
