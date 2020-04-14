@@ -9,5 +9,32 @@
         android:id="@+id/navigation_posts"
         android:name="app.storytel.candidate.com.post.PostsFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_posts" />
+        tools:layout="@layout/fragment_posts">
+
+        <argument
+            android:name="post"
+            app:argType="app.storytel.candidate.com.post.domain.data.local.model.Post" />
+
+        <action
+            android:id="@+id/action_navigation_posts_to_navigation_post"
+            app:destination="@id/navigation_post"
+            app:enterAnim="@anim/enter"
+            app:exitAnim="@anim/exit"
+            app:popEnterAnim="@anim/left_to_right"
+            app:popExitAnim="@anim/right_to_left">
+            <argument
+                android:name="post"
+                app:argType="app.storytel.candidate.com.post.domain.data.local.model.Post" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_post"
+        android:name="app.storytel.candidate.com.post.detail.PostFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_post">
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
 </navigation>

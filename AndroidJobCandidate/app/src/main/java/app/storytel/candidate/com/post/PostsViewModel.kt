@@ -58,8 +58,7 @@ class PostsViewModel(private val getPostsUseCase: GetPostsUseCase,
         return@combineWith computePosts(postResource, photoResource)
     }
 
-    fun onPostItemClicked(post: Post) {
-    }
+    fun onPostItemClicked(post: Post) = navigate(PostsFragmentDirections.actionNavigationPostsToNavigationPost(post, post.title!!))
 
     private fun computePosts(postResource: Resource<List<Post>>?, photoResource: Resource<List<Photo>>?): Resource<List<Post>> {
         when {

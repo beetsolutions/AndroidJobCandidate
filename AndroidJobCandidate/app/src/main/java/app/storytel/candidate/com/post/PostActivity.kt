@@ -5,10 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import app.storytel.candidate.com.R
-import kotlinx.android.synthetic.main.activity_posts.*
 
 class PostActivity : AppCompatActivity() {
 
@@ -28,6 +27,6 @@ class PostActivity : AppCompatActivity() {
     private fun configureNavController() {
         navController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(navController.graph)
-        NavigationUI.setupWithNavController(toolbar, navController, appBarConfiguration)
+        setupActionBarWithNavController(navController, appBarConfiguration)
     }
 }
