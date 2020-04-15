@@ -1,6 +1,6 @@
 package app.storytel.candidate.com.post.domain.data.remote.di
 
-import android.app.Application
+import android.content.Context
 import app.storytel.candidate.com.AppDispatchers
 import app.storytel.candidate.com.BuildConfig
 import app.storytel.candidate.com.post.domain.data.local.dao.CommentsDao
@@ -19,13 +19,35 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-private const val BASE_URL = "https://jsonplaceholder.typicode.com/"
+const val BASE_URL = "https://jsonplaceholder.typicode.com/"
 
-val remoteModule = module {
-    single { provideOkHttpClient(get()) }
-    single { provideRetrofit(get()) }
+fun remoteModule(baseUrl: String, context: Context) = module {
     single { providePostRepository(get(), get(), get(), get(), get()) }
-    single { providePostService(get()) }
+
+    factory {
+        OkHttpClient.Builder()
+                .addInterceptor(NoConnectionInterceptor(context))
+                .addInterceptor(ErrorInterceptor())
+                .addInterceptor(HttpLoggingInterceptor().apply {
+                    level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
+                    else HttpLoggingInterceptor.Level.NONE
+                })
+                .connectTimeout(30000, TimeUnit.MILLISECONDS)
+                .readTimeout(30000, TimeUnit.MILLISECONDS)
+                .writeTimeout(30000, TimeUnit.MILLISECONDS)
+                .build()
+    }
+
+    single {
+        Retrofit.Builder()
+                .client(get())
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
+                .build()
+    }
+
+    factory{ get<Retrofit>().create(PostService::class.java) }
 }
 
 fun providePostRepository(postService: PostService,
@@ -34,30 +56,4 @@ fun providePostRepository(postService: PostService,
                           photosDao: PhotosDao,
                           commentsDao: CommentsDao): PostRepository {
     return PostRepositoryImpl(postService, appDispatchers, postsDao, photosDao, commentsDao)
-}
-
-fun providePostService(retrofit: Retrofit): PostService = retrofit.create(PostService::class.java)
-
-fun provideOkHttpClient(application: Application): OkHttpClient {
-    return OkHttpClient()
-            .newBuilder()
-            .addInterceptor(NoConnectionInterceptor(application))
-            .addInterceptor(ErrorInterceptor())
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
-                else HttpLoggingInterceptor.Level.NONE
-            })
-            .connectTimeout(30000, TimeUnit.MILLISECONDS)
-            .readTimeout(30000, TimeUnit.MILLISECONDS)
-            .writeTimeout(30000, TimeUnit.MILLISECONDS)
-            .build()
-}
-
-fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder()
-            .client(okHttpClient)
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .build()
 }

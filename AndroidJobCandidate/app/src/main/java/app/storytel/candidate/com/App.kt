@@ -4,6 +4,7 @@ import android.app.Application
 import app.storytel.candidate.com.di.appModule
 import app.storytel.candidate.com.post.di.postsModule
 import app.storytel.candidate.com.post.domain.data.local.di.localModule
+import app.storytel.candidate.com.post.domain.data.remote.di.BASE_URL
 import app.storytel.candidate.com.post.domain.data.remote.di.remoteModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -28,7 +29,7 @@ open class App : Application() {
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(listOf(appModule, postsModule, remoteModule, localModule))
+            modules(listOf(appModule, postsModule, remoteModule(BASE_URL, this@App), localModule))
         }
     }
 }
