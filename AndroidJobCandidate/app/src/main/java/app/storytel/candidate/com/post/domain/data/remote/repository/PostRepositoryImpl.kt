@@ -1,7 +1,6 @@
 package app.storytel.candidate.com.post.domain.data.remote.repository
 
 import androidx.lifecycle.LiveData
-import app.storytel.candidate.com.AppDispatchers
 import app.storytel.candidate.com.post.domain.data.local.dao.CommentsDao
 import app.storytel.candidate.com.post.domain.data.local.dao.PhotosDao
 import app.storytel.candidate.com.post.domain.data.local.dao.PostsDao
@@ -18,13 +17,12 @@ import app.storytel.candidate.com.post.domain.data.remote.repository.resource.Re
 import kotlinx.coroutines.Deferred
 
 class PostRepositoryImpl(private val postService: PostService,
-                         private val appDispatchers: AppDispatchers,
                          private val postsDao: PostsDao,
                          private val photosDao: PhotosDao,
                          private val commentsDao: CommentsDao) : PostRepository {
 
     override suspend fun getPosts(): LiveData<Resource<List<Post>>> {
-        return object : NetworkBoundResource<List<Post>, List<PostResponse>>(appDispatchers) {
+        return object : NetworkBoundResource<List<Post>, List<PostResponse>>() {
 
             override suspend fun saveCallResults(items: List<PostResponse>) {
                 if (items.isNotEmpty()) {
@@ -50,7 +48,7 @@ class PostRepositoryImpl(private val postService: PostService,
     }
 
     override suspend fun getPhotos(): LiveData<Resource<List<Photo>>> {
-        return object : NetworkBoundResource<List<Photo>, List<PhotoResponse>>(appDispatchers) {
+        return object : NetworkBoundResource<List<Photo>, List<PhotoResponse>>() {
 
             override suspend fun saveCallResults(items: List<PhotoResponse>) {
                 if (items.isNotEmpty()) {
@@ -74,7 +72,7 @@ class PostRepositoryImpl(private val postService: PostService,
     }
 
     override suspend fun getComments(id: Int): LiveData<Resource<List<Comment>>> {
-        return object : NetworkBoundResource<List<Comment>, List<CommentResponse>>(appDispatchers) {
+        return object : NetworkBoundResource<List<Comment>, List<CommentResponse>>() {
             override suspend fun saveCallResults(items: List<CommentResponse>) {
                 if (items.isNotEmpty()) {
                     val comments = items.map {

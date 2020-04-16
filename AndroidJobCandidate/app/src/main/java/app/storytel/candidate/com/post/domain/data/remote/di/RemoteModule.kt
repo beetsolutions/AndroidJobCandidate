@@ -1,7 +1,6 @@
 package app.storytel.candidate.com.post.domain.data.remote.di
 
 import android.content.Context
-import app.storytel.candidate.com.AppDispatchers
 import app.storytel.candidate.com.BuildConfig
 import app.storytel.candidate.com.post.domain.data.local.dao.CommentsDao
 import app.storytel.candidate.com.post.domain.data.local.dao.PhotosDao
@@ -22,7 +21,7 @@ import java.util.concurrent.TimeUnit
 const val BASE_URL = "https://jsonplaceholder.typicode.com/"
 
 fun remoteModule(baseUrl: String, context: Context) = module {
-    single { providePostRepository(get(), get(), get(), get(), get()) }
+    single { providePostRepository(get(), get(), get(), get()) }
 
     factory {
         OkHttpClient.Builder()
@@ -51,9 +50,8 @@ fun remoteModule(baseUrl: String, context: Context) = module {
 }
 
 fun providePostRepository(postService: PostService,
-                          appDispatchers: AppDispatchers,
                           postsDao: PostsDao,
                           photosDao: PhotosDao,
                           commentsDao: CommentsDao): PostRepository {
-    return PostRepositoryImpl(postService, appDispatchers, postsDao, photosDao, commentsDao)
+    return PostRepositoryImpl(postService, postsDao, photosDao, commentsDao)
 }

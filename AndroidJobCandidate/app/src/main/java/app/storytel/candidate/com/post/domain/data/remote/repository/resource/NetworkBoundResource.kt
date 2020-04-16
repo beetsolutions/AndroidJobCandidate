@@ -4,19 +4,18 @@ import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import app.storytel.candidate.com.AppDispatchers
 import app.storytel.candidate.com.post.domain.data.remote.model.ApiResponse
 import kotlinx.coroutines.*
 import timber.log.Timber
 import kotlin.coroutines.coroutineContext
 
-abstract class NetworkBoundResource<ResultType, RequestType>(private val appDispatchers: AppDispatchers) {
+abstract class NetworkBoundResource<ResultType, RequestType>() {
 
     private val result = MutableLiveData<Resource<ResultType>>()
     private val supervisorJob = SupervisorJob()
 
     suspend fun build(): NetworkBoundResource<ResultType, RequestType> {
-        withContext(appDispatchers.main) { result.value = Resource.loading(null) }
+        withContext(Dispatchers.Main) { result.value = Resource.loading(null) }
         CoroutineScope(coroutineContext).launch(supervisorJob) {
             val dbResult = loadFromDb()
             if (shouldFetch(dbResult)) {

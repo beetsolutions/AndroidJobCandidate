@@ -2,7 +2,7 @@ package app.storytel.candidate.com.post.domain.data.remote.model
 
 import retrofit2.Response
 
-sealed class ApiResponse<T> {
+sealed class ApiResponse<T>() {
 
     companion object {
 
